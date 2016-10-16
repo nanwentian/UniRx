@@ -8,27 +8,21 @@ using System;
 
 namespace UniRx.Tests
 {
-    public class Result : PresenterBase
+    public class Result : MonoBehaviour
     {
         public UnityEngine.UI.Text text;
 
         public ReactiveProperty<string> Message { get; private set; }
         public ReactiveProperty<Color> Color { get; private set; }
 
-        protected override IPresenter[] Children
-        {
-            get
-            {
-                return EmptyChildren;
-            }
-        }
+        bool alreadyStarted = false;
 
-        protected override void BeforeInitialize()
+        void Start()
         {
-        }
+            if (alreadyStarted) return;
 
-        protected override void Initialize()
-        {
+            alreadyStarted = true;
+
             var image = this.GetComponent<Image>();
 
             Message = new ReactiveProperty<string>("");
@@ -36,6 +30,11 @@ namespace UniRx.Tests
 
             Color = new ReactiveProperty<UnityEngine.Color>();
             Color.Subscribe(x => image.color = x);
+        }
+
+        public void ForceInitialize()
+        {
+            Start();
         }
     }
 }
